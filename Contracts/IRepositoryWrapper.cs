@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using questionnaire.Contracts;
 
 namespace Contracts
 {
@@ -13,6 +14,7 @@ namespace Contracts
         IWalkthroughQuestionRepository WalkthroughQuestion { get; }
         ITextAnswerRepository TextAnswer { get; }
         ISelectedVariantRepository SelectedVariant { get; }
-        void Save(); 
+        IAspNetRoleRepository AspNetRole { get; }
+        void Save();
     }
 }

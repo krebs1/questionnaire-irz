@@ -1,5 +1,6 @@
 ﻿using Contracts;
 using Entities;
+using questionnaire.Contracts;
 
 namespace Repository
 {
@@ -14,7 +15,8 @@ namespace Repository
         private IWalkthroughQuestionRepository _walkthroughQuestion;
         private ITextAnswerRepository _textAnswer;
         private ISelectedVariantRepository _selectedVariant;
-
+        private IAspNetRoleRepository _aspNetRole;
+        
         public IQuestionnaireRepository Questionnaire
         {
             get
@@ -82,6 +84,16 @@ namespace Repository
                 if (_selectedVariant == null)
                     _selectedVariant = new SelectedVariantRepository(_repoContext);
                 return _selectedVariant;
+            }
+        }
+        
+        public IAspNetRoleRepository AspNetRole
+        {
+            get
+            {
+                if (_aspNetRole == null)
+                    _aspNetRole = new AspNetRoleRepository(_repoContext);
+                return _aspNetRole;
             }
         }
         
