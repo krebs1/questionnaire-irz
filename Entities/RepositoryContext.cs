@@ -1,9 +1,10 @@
 using Entities.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Entities;
 
-public class RepositoryContext : DbContext
+public class RepositoryContext : IdentityDbContext
 {
     public RepositoryContext (DbContextOptions options)
         :base(options){}
