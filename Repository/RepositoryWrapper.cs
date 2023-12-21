@@ -16,7 +16,8 @@ namespace Repository
         private ITextAnswerRepository _textAnswer;
         private ISelectedVariantRepository _selectedVariant;
         private IAspNetRoleRepository _aspNetRole;
-        
+        private IAspNetUserRepository _aspNetUser;
+
         public IQuestionnaireRepository Questionnaire
         {
             get
@@ -94,6 +95,16 @@ namespace Repository
                 if (_aspNetRole == null)
                     _aspNetRole = new AspNetRoleRepository(_repoContext);
                 return _aspNetRole;
+            }
+        }
+
+        public IAspNetUserRepository AspNetUser
+        {
+            get
+            {
+                if (_aspNetUser == null)
+                    _aspNetUser = new AspNetUserRepository(_repoContext);
+                return _aspNetUser;
             }
         }
         

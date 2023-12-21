@@ -44,7 +44,7 @@ namespace questionnaire.Migrations
 
                     b.HasIndex("QuestionnaireId");
 
-                    b.ToTable("question");
+                    b.ToTable("question", (string)null);
                 });
 
             modelBuilder.Entity("Entities.Models.Questionnaire", b =>
@@ -60,7 +60,7 @@ namespace questionnaire.Migrations
 
                     b.HasKey("QuestionnaireId");
 
-                    b.ToTable("questionnaire");
+                    b.ToTable("questionnaire", (string)null);
                 });
 
             modelBuilder.Entity("Entities.Models.SelectedVariant", b =>
@@ -84,7 +84,7 @@ namespace questionnaire.Migrations
 
                     b.HasIndex("WalkthroughQuestionId");
 
-                    b.ToTable("selected_variant");
+                    b.ToTable("selected_variant", (string)null);
                 });
 
             modelBuilder.Entity("Entities.Models.TextAnswer", b =>
@@ -106,7 +106,7 @@ namespace questionnaire.Migrations
 
                     b.HasIndex("WalkthroughQuestionId");
 
-                    b.ToTable("text_answer");
+                    b.ToTable("text_answer", (string)null);
                 });
 
             modelBuilder.Entity("Entities.Models.Variant", b =>
@@ -131,7 +131,7 @@ namespace questionnaire.Migrations
 
                     b.HasIndex("QuestionId");
 
-                    b.ToTable("variant");
+                    b.ToTable("variant", (string)null);
                 });
 
             modelBuilder.Entity("Entities.Models.Walkthrough", b =>
@@ -156,7 +156,7 @@ namespace questionnaire.Migrations
 
                     b.HasIndex("QuestionnaireId");
 
-                    b.ToTable("walkthrough");
+                    b.ToTable("walkthrough", (string)null);
                 });
 
             modelBuilder.Entity("Entities.Models.WalkthroughQuestion", b =>
@@ -180,7 +180,7 @@ namespace questionnaire.Migrations
 
                     b.HasIndex("WalkthroughId");
 
-                    b.ToTable("walkthrough_question");
+                    b.ToTable("walkthrough_question", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

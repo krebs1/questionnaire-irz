@@ -16,4 +16,5 @@ public class RepositoryContext : IdentityDbContext
     public DbSet<WalkthroughQuestion>? WalkthroughQuestions { get; set; }
     public DbSet<TextAnswer>? TextAnswers { get; set; }
     public DbSet<SelectedVariant>? SelectedVariants { get; set; }
+    //public DbSet<AspNetRole>? AspNetRoles { get; set; }
 }

@@ -15,6 +15,8 @@ namespace Contracts
         ITextAnswerRepository TextAnswer { get; }
         ISelectedVariantRepository SelectedVariant { get; }
         IAspNetRoleRepository AspNetRole { get; }
+        IAspNetUserRepository AspNetUser { get; }
+
         void Save();
     }
 }
