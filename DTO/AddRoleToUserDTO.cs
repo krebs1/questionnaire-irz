@@ -3,11 +3,11 @@ namespace questionnaire.DTO;
 public class AddRoleToUserDTO
 {
     public Guid UserId { get; set; }
-    public Guid RoleId { get; set; }
+    public string RoleName { get; set; }
 
-    public AddRoleToUserDTO(Guid userId, Guid roleId)
+    public AddRoleToUserDTO(Guid userId, string roleName)
     {
         UserId = userId;
-        RoleId = roleId;
+        RoleName = roleName;
     }
 }

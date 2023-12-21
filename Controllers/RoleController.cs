@@ -12,50 +12,72 @@ public class RoleController : ControllerBase
     private IRepositoryWrapper _repository;
 
     UserManager<IdentityUser> _userManager;
-    public RoleController (IRepositoryWrapper repository, UserManager<IdentityUser> userManager) 
+    private RoleManager<IdentityRole> _roleManager;
+    public RoleController (IRepositoryWrapper repository, UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager) 
     {
         _repository = repository;
         _userManager = userManager;
+        _roleManager = roleManager;
     }
     
     [HttpPost("create")]
     public async Task<IActionResult> Create(string roleName = null)
     {
-        if (roleName == null || string.IsNullOrEmpty(roleName)) return BadRequest("The \"role name\" field should not be empty");
-
-        var checkRole = _repository.AspNetRole.GetAspNetRoleByName(roleName);
-        if (checkRole != null) return BadRequest($"Role with name '{roleName}' already exists");
-        
-        _repository.AspNetRole.CreateAspNetRole(new IdentityRole(roleName));
-        _repository.Save();
-        return Ok();
+        try
+        {
+            if(roleName == null) return BadRequest("The \"role name\" field should not be empty");
+            
+            var result = await _roleManager.CreateAsync(new IdentityRole(roleName));
+            if (!result.Succeeded) throw new Exception("Role creating is not success");
+            
+            return Ok();
+        }
+        catch (Exception e)
+        {
+            return StatusCode(500, $"Internal server error: {e}");
+        }
     }
     
     [HttpPost("add-role")]
-    public async Task<IActionResult> AddRoleToUser(AddRoleToUserDTO addRoleToUserDto)
-    {
-        var checkRole = _repository.AspNetRole.GetAspNetRoleById(addRoleToUserDto.RoleId);
-        if (checkRole == null) return NotFound($"The role with id '{addRoleToUserDto.RoleId}' was not found");
-
-        var checkUser = await _userManager.FindByIdAsync(addRoleToUserDto.UserId.ToString());
-        if (checkUser == null) return NotFound($"The user with id '{addRoleToUserDto.UserId}' was not found");
-
-        _userManager.AddToRoleAsync(checkUser, checkRole.Name);
-        return Ok();
-    }
-    
-    [HttpDelete("delete")]
-    public async Task<IActionResult> Delete(Guid id)
+    public async Task<IActionResult> AddRoleToUser(AddRoleToUserDTO addRoleToUserDto = null)
     {
         try
         {
-            if(id == null) return BadRequest("The \"id\" field should not be empty");
+            if(addRoleToUserDto == null) return BadRequest("Data should not be empty");
             
-            var checkRole = _repository.AspNetRole.GetAspNetRoleById(id);
-            if (checkRole == null) return NotFound($"The role with id '{id}' was not found");
+            var checkRole = await _roleManager.FindByNameAsync(addRoleToUserDto.RoleName);
+            if (checkRole == null) return NotFound($"The role with name '{addRoleToUserDto.RoleName}' was not found");
+        
+            var checkUser = await _userManager.FindByIdAsync(addRoleToUserDto.UserId.ToString());
+            if (checkUser == null) return NotFound($"The user with id '{addRoleToUserDto.UserId}' was not found");
+
+            var isInRole = await _userManager.IsInRoleAsync(checkUser, checkRole.Name);
+            if (isInRole) return Ok("User already in role");
+
+            var result = await _userManager.AddToRoleAsync(checkUser, checkRole.Name);
+            if (!result.Succeeded) throw new Exception("Adding role to user is not success");
+        
+            return Ok();
+        }
+        catch (Exception e)
+        {
+            return StatusCode(500, $"Internal server error: {e}");
+        }
+    }
+    
+    [HttpDelete("delete")]
+    public async Task<IActionResult> Delete(string name = null)
+    {
+        try
+        {
+            if(name == null) return BadRequest("The \"id\" field should not be empty");
+
+            var checkRole = await _roleManager.FindByNameAsync(name);
+            if (checkRole == null) return NotFound($"The role with name '{name}' was not found");
+
+            var result = await _roleManager.DeleteAsync(checkRole);
+            if (!result.Succeeded) throw new Exception("Role deletion is not success");
             
-            _repository.AspNetRole.DeleteAspNetRole(checkRole);
-            _repository.Save();
             return NoContent();
         }
         catch (Exception e)
