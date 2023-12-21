@@ -14,7 +14,14 @@ namespace questionnaire
 
             CreateMap<UpdateQuestionnaireDTO, Questionnaire>();
             
-           // CreateMap<DeleteQuestionnaireDTO, Questionnaire>();
+            CreateMap<CreateQuestionDTO, Question>();
+            
+            CreateMap<UpdateQuestionDTO, Question>();
+            
+            CreateMap<CreateVariantDTO, Variant>();
+            
+            CreateMap<UpdateVariantDTO, Variant>();
+            
         }
     }
 }
