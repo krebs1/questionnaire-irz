@@ -8,4 +8,31 @@ public class QuestionnaireRepository : RepositoryBase<Questionnaire>, IQuestionn
 {
     public QuestionnaireRepository(RepositoryContext repositoryContext)
         :base(repositoryContext){}
+
+    public void CreateQuestionnaire(Questionnaire questionnaire)
+    {
+        Create(questionnaire);
+    }
+
+    public void UpdateQuestionnaire(Questionnaire questionnaire)
+    {
+       Update(questionnaire);
+    }
+
+    public void DeleteQuestionnaire(Questionnaire questionnaire)
+    {
+       Delete(questionnaire);
+    }
+
+    public Questionnaire GetQuestionnaireById(Guid questionnaireId)
+    {
+        return FindByCondition(questionnaire => questionnaire.QuestionnaireId.Equals(questionnaireId))
+            .FirstOrDefault();
+    }
+
+    public IEnumerable<Questionnaire> GetAllQuestionnaire()
+    {
+        return FindAll()
+            .ToList();
+    }
 }

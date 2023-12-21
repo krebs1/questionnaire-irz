@@ -1,5 +1,6 @@
 
 using System.Text;
+using AutoMapper;
 using Entities;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -12,6 +13,7 @@ builder.Services.ConfigureIISIntegration();
 builder.Services.ConfigurePgContext(builder.Configuration);
 builder.Services.ConfigureRepositoryWrapper();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddAutoMapper(typeof(Program));
 
 builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
     {
