@@ -21,7 +21,15 @@ namespace questionnaire
             CreateMap<CreateVariantDTO, Variant>();
             
             CreateMap<UpdateVariantDTO, Variant>();
-            
+
+            CreateMap<StartWalkthroughDTO, Walkthrough>();
+
+            CreateMap<CreateWalkthroughQuestionDTO, WalkthroughQuestion>();
+
+            CreateMap<CreateTextAnswerDTO, TextAnswer>();
+
+            CreateMap<CreateSelectVariantDTO, SelectedVariant>();
+
         }
     }
 }

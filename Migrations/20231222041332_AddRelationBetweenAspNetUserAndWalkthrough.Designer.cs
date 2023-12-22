@@ -3,6 +3,7 @@ using System;
 using Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace questionnaire.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    partial class RepositoryContextModelSnapshot : ModelSnapshot
+    [Migration("20231222041332_AddRelationBetweenAspNetUserAndWalkthrough")]
+    partial class AddRelationBetweenAspNetUserAndWalkthrough
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -147,7 +149,7 @@ namespace questionnaire.Migrations
                     b.Property<string>("UserId")
                         .HasColumnType("text");
 
-                    b.Property<DateTime?>("WalkthroughEnd")
+                    b.Property<DateTime>("WalkthroughEnd")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("end_walkthrough");
 

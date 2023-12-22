@@ -8,4 +8,9 @@ public class TextAnswerRepository : RepositoryBase<TextAnswer>, ITextAnswerRepos
 {
     public TextAnswerRepository(RepositoryContext repositoryContext)
         :base(repositoryContext){}
+
+    public void CreateTextAnswer(TextAnswer textAnswer)
+    {
+        Create(textAnswer);
+    }
 }

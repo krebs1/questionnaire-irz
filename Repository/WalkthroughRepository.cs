@@ -8,4 +8,31 @@ public class WalkthroughRepository : RepositoryBase<Walkthrough>, IWalkthroughRe
 {
     public WalkthroughRepository(RepositoryContext repositoryContext)
         :base(repositoryContext){}
+
+    public void CreateWalkthrough(Walkthrough walkthrough)
+    {
+        Create(walkthrough);
+    }
+
+    public void UpdateWalkthrough(Walkthrough walkthrough)
+    {
+        Update(walkthrough);
+    }
+
+    public void DeleteWalkthrough(Walkthrough walkthrough)
+    {
+        Delete(walkthrough);
+    }
+
+    public Walkthrough GetWalkthroughById(Guid walkthroughId)
+    {
+        return FindByCondition(walkthrough => walkthrough.WalkthroughId.Equals(walkthroughId))
+            .FirstOrDefault();
+    }
+
+    public IEnumerable<Walkthrough> GetAllWalkthroughs()
+    {
+        return FindAll()
+            .ToList();
+    }
 }

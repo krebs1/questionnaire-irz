@@ -8,4 +8,9 @@ public class SelectedVariantRepository : RepositoryBase<SelectedVariant>, ISelec
 {
     public SelectedVariantRepository(RepositoryContext repositoryContext)
         :base(repositoryContext){}
+
+    public void CreateSelectedVariant(SelectedVariant selectedVariant)
+    {
+        Create(selectedVariant);
+    }
 }

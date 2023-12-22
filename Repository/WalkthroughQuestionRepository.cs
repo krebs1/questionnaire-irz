@@ -8,4 +8,9 @@ public class WalkthroughQuestionRepository: RepositoryBase<WalkthroughQuestion>,
 {
     public WalkthroughQuestionRepository(RepositoryContext repositoryContext)
         :base(repositoryContext){}
+
+    public void CreateWalkthroughQuestion(WalkthroughQuestion walkthroughQuestion)
+    {
+        Create(walkthroughQuestion);
+    }
 }

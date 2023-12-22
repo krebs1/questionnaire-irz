@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Identity;
 
 namespace Entities.Models;
 
@@ -12,9 +13,14 @@ public class Walkthrough
     public DateTime WalkthroughStart { get; set; }
     
     [Column("end_walkthrough")]
-    public DateTime WalkthroughEnd { get; set; }
+    public DateTime? WalkthroughEnd { get; set; }
     
     [ForeignKey(nameof(Questionnaire))]
     public Guid QuestionnaireId { get; set; }
     public Questionnaire? Questionnaire { get; set; }
+    
+    [ForeignKey(nameof(IdentityUser))]
+    public string? UserId { get; set; }
+    
+    public IdentityUser? IdentityUser { get; set; }
 }

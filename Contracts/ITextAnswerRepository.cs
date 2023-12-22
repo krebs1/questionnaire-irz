@@ -2,7 +2,7 @@ using Entities.Models;
 
 namespace Contracts;
 
-public interface ITextAnswerRepository : IRepositoryBase<TextAnswer>
+public interface ITextAnswerRepository
 {
-    
+    void CreateTextAnswer(TextAnswer textAnswer);
 }
