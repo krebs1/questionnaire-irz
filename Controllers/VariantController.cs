@@ -24,7 +24,15 @@ public class VariantController : ControllerBase
     {
         try
         {
-            if(createVariantDTO == null) return BadRequest("Data should not be empty");
+            if(createVariantDTO == null)
+                return BadRequest("Data should not be empty");
+
+            var checkQuestion = _repository.Question.GetQuestionById(createVariantDTO.QuestionId);
+            if(checkQuestion == null)
+                return NotFound($"The question with id '{createVariantDTO.QuestionId}' was not found");
+
+            if (checkQuestion.QuestionType != "SELECT")
+                return BadRequest("Variant can only be added for a question with type \"SELECT\"");
 
             var variantEntity = _mapper.Map<Variant>(createVariantDTO);
             
@@ -43,14 +51,19 @@ public class VariantController : ControllerBase
     {
         try
         {
-            if(updateVariantDTO == null) return BadRequest("Data should not be empty");
+            if(updateVariantDTO == null)
+                return BadRequest("Data should not be empty");
 
-            var updateEntity = _mapper.Map<Variant>(updateVariantDTO);
+            var checkVariant = _repository.Variant.GetVariantById(updateVariantDTO.VariantId);
+            if(checkVariant == null)
+                return NotFound($"The variant with id '{updateVariantDTO.VariantId}' was not found");
+
+            checkVariant.VariantText = updateVariantDTO.VariantText;
             
-            _repository.Variant.UpdateVariant(updateEntity);
+            _repository.Variant.UpdateVariant(checkVariant);
             _repository.Save();
           
-            return Ok(updateEntity);
+            return Ok(checkVariant);
         }
         catch (Exception e)
         {
@@ -63,7 +76,8 @@ public class VariantController : ControllerBase
         try
         {
             var checkVariant = _repository.Variant.GetVariantById(id);
-            if (checkVariant == null) return NotFound($"The questionnaire with id '{id}' was not found");
+            if (checkVariant == null) return NotFound($"The variant with id '{id}' was not found");
+            
             _repository.Variant.DeleteVariant(checkVariant);
             _repository.Save();
           

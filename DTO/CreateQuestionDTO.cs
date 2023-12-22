@@ -7,6 +7,5 @@ public class CreateQuestionDTO
     
     public string QuestionText { get; set; }
     
-    public string QuestionnaireId { get; set; }
-    
+    public Guid QuestionnaireId { get; set; }
 }

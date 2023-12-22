@@ -4,5 +4,5 @@ public class CreateVariantDTO
 {
     public string VariantText { get; set; }
     
-    public string questionId { get; set; }
+    public Guid QuestionId { get; set; }
 }
