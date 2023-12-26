@@ -18,7 +18,7 @@ namespace questionnaire.Controllers;
         private UserManager<IdentityUser> _userManager;
         private IConfiguration _config;
 
-        public AuthController(IAuthService authService, UserManager<IdentityUser> userManager, IConfiguration config)
+        public AuthController(IAuthService authService, UserManager<IdentityUser> userManager, IConfiguration config, SignInManager<IdentityUser> signInManager)
         {
             _authService = authService;
             _userManager = userManager;
@@ -58,8 +58,29 @@ namespace questionnaire.Controllers;
                     return BadRequest("Неверный пароль");
 
                 var token = await _authService.Login(identityUser);
+                
+                HttpContext.Response.Cookies.Append("token", token, new CookieOptions
+                {
+                    Expires = DateTime.UtcNow.AddSeconds(Convert.ToDouble(_config.GetSection("Jwt:ExpiresSeconds").Value)),
+                    HttpOnly = true,
+                });
             
                 return Ok(new { token });
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, "Внутрення ошибка сервера");
+            }
+        }
+        
+        [HttpPost("Logout")]
+        public async Task<IActionResult> Logout()
+        {
+            try
+            {
+                HttpContext.Response.Cookies.Delete("token");
+                
+                return Ok("Выход произошел успешно");
             }
             catch (Exception e)
             {
