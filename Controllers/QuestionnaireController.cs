@@ -1,24 +1,17 @@
-﻿using Contracts;
-using Entities.Models;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using questionnaire.DTO;
-using AutoMapper;
-    
+using questionnaire.Contracts;
+
 namespace questionnaire.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
 public class QuestionnaireController : ControllerBase
 {
-    private IRepositoryWrapper _repository;
-    
-    private IMapper _mapper;
-    
-    public QuestionnaireController (IRepositoryWrapper repository, IMapper mapper) 
+    private IQuestionnaireService _questionnaireService;
+    public QuestionnaireController (IQuestionnaireService questionnaireService)
     {
-        _repository = repository;
-        _mapper = mapper;
+        _questionnaireService = questionnaireService;
     }
     
     [HttpPost()]
@@ -26,82 +19,79 @@ public class QuestionnaireController : ControllerBase
     {
         try
         {
-            if(createQuestionnaireDto == null) return BadRequest("Data should not be empty");
+            if(createQuestionnaireDto == null) return BadRequest("Данные не должны равняться null");
 
-            var questionnaireEntity = _mapper.Map<Questionnaire>(createQuestionnaireDto);
-            
-          _repository.Questionnaire.CreateQuestionnaire(questionnaireEntity);
-          _repository.Save();
+            var result = _questionnaireService.Create(createQuestionnaireDto);
           
-          return Ok(questionnaireEntity);
+            return Created(nameof(Create), result);
         }
         catch (Exception e)
         {
-            return StatusCode(500, $"Internal server error: {e}");
+            return StatusCode(500, $"Внутрення ошибка сервера");
         }
     }
+    
     [HttpPut()]
     public async Task<IActionResult> Update(UpdateQuestionnaireDTO updateQuestionnaireDto = null)
     {
         try
         {
-            if(updateQuestionnaireDto == null) return BadRequest("Data should not be empty");
+            if(updateQuestionnaireDto == null) return BadRequest("Данные не должны равняться null");
 
-            var questionnaireEntity = _mapper.Map<Questionnaire>(updateQuestionnaireDto);
-            
-            _repository.Questionnaire.UpdateQuestionnaire(questionnaireEntity);
-            _repository.Save();
+            var result = _questionnaireService.Update(updateQuestionnaireDto);
           
-            return Ok(questionnaireEntity);
+            return Ok(result);
         }
         catch (Exception e)
         {
-            return StatusCode(500, $"Internal server error: {e}");
+            return StatusCode(500, $"Внутрення ошибка сервера");
         }
     }
+    
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(Guid id)
     {
         try
         {
-            var checkQuestionnaire = _repository.Questionnaire.GetQuestionnaireById(id);
-            if (checkQuestionnaire == null) return NotFound($"The questionnaire with id '{id}' was not found");
-            _repository.Questionnaire.DeleteQuestionnaire(checkQuestionnaire);
-            _repository.Save();
+            if(id == null) return BadRequest("Поле \"id\" не должно быть пустым");
+            
+            _questionnaireService.Delete(id);
           
             return NoContent();
         }
         catch (Exception e)
         {
-            return StatusCode(500, $"Internal server error: {e}");
+            return StatusCode(500, $"Внутрення ошибка сервера");
         }
     }
+    
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById(Guid id)
     {
         try
         {
-            if(id == null) return BadRequest("The \"id\" field should not be empty");
+            if(id == null) return BadRequest("Поле \"id\" не должно быть пустым");
 
-         var result = _repository.Questionnaire.GetQuestionnaireById(id);
+            var result = _questionnaireService.GetById(id);
          
             return Ok(result);
         }
         catch (Exception e)
         {
-            return StatusCode(500, $"Internal server error: {e}");
+            return StatusCode(500, $"Внутрення ошибка сервера");
         }
     }
+    
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
         try
         {
-            return Ok(_repository.Questionnaire.GetAllQuestionnaire());
+            return Ok(_questionnaireService.GetAll());
         }
         catch (Exception e)
         {
-            return StatusCode(500, $"Internal server error: {e}");
+            return StatusCode(500, $"Внутрення ошибка сервера");
         }
     }
 }
