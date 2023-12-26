@@ -15,6 +15,7 @@ namespace Repository
         private IWalkthroughQuestionRepository _walkthroughQuestion;
         private ITextAnswerRepository _textAnswer;
         private ISelectedVariantRepository _selectedVariant;
+        private IFileRepository _file;
         private IAspNetRoleRepository _aspNetRole;
         private IAspNetUserRepository _aspNetUser;
 
@@ -85,6 +86,16 @@ namespace Repository
                 if (_selectedVariant == null)
                     _selectedVariant = new SelectedVariantRepository(_repoContext);
                 return _selectedVariant;
+            }
+        }
+
+        public IFileRepository File
+        {
+            get
+            {
+                if (_file == null)
+                    _file = new FileRepository(_repoContext);
+                return _file;
             }
         }
         

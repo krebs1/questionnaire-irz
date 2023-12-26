@@ -1,6 +1,7 @@
 using Entities.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using File = Entities.Models.File;
 
 namespace Entities;
 
@@ -16,5 +17,6 @@ public class RepositoryContext : IdentityDbContext
     public DbSet<WalkthroughQuestion>? WalkthroughQuestions { get; set; }
     public DbSet<TextAnswer>? TextAnswers { get; set; }
     public DbSet<SelectedVariant>? SelectedVariants { get; set; }
+    public DbSet<File>? Files { get; set; }
     //public DbSet<AspNetRole>? AspNetRoles { get; set; }
 }

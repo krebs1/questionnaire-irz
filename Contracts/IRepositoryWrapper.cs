@@ -14,6 +14,7 @@ namespace Contracts
         IWalkthroughQuestionRepository WalkthroughQuestion { get; }
         ITextAnswerRepository TextAnswer { get; }
         ISelectedVariantRepository SelectedVariant { get; }
+        IFileRepository File { get; }
         IAspNetRoleRepository AspNetRole { get; }
         IAspNetUserRepository AspNetUser { get; }
 
