@@ -4,6 +4,7 @@ using System.Text;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using questionnaire.Contracts;
 using questionnaire.DTO;
 using questionnaire.Services;
 
@@ -27,50 +28,42 @@ namespace questionnaire.Controllers;
         [HttpPost("Register")]
         public async Task<IActionResult> RegisterUser(RegisterDTO user)
         {
-            if (await _authService.RegisterUser(user))
+            try
             {
-                return Ok("Successfuly done");
+                var result = await _authService.RegisterUser(user);
+                if(result.Succeeded)
+                    return CreatedAtAction(nameof(RegisterUser), new {user.UserName});
+
+                return BadRequest("Пользователь с этим именем уже существует");
             }
-            return BadRequest("Something went worng");
+            catch (Exception e)
+            {
+                return StatusCode(500, "Внутрення ошибка сервера");
+            }
         }
 
         [HttpPost("Login")]
         public async Task<IActionResult> Login(LoginDTO user)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return BadRequest();
+                if (!ModelState.IsValid)
+                    return BadRequest();
+                
+                var identityUser = await _userManager.FindByEmailAsync(user.UserName);
+                if (identityUser == null)
+                    return BadRequest("Неверное имя пользователя");
+
+                if (! await _userManager.CheckPasswordAsync(identityUser, user.Password))
+                    return BadRequest("Неверный пароль");
+
+                var token = await _authService.Login(identityUser);
+            
+                return Ok(new { token });
             }
-
-            var checkUser = await _userManager.FindByEmailAsync(user.UserName);
-            if (checkUser is null)
-                return BadRequest($"Wrong username");
-
-            if (! await _userManager.CheckPasswordAsync(checkUser, user.Password))
-                return BadRequest($"Wrong password");
-
-            var roles = await _userManager.GetRolesAsync(checkUser);
-
-            var _options = new IdentityOptions();
-
-            var tokenDescriptor = new SecurityTokenDescriptor
+            catch (Exception e)
             {
-                Subject = new ClaimsIdentity(new Claim[]
-                {
-                    new Claim("UserID",checkUser.Id.ToString()),
-                    new Claim(_options.ClaimsIdentity.RoleClaimType,roles.FirstOrDefault())
-                }),
-                Expires = DateTime.UtcNow.AddDays(1),
-                SigningCredentials = new SigningCredentials
-                (
-                    new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config.GetSection("Jwt:Key").Value)), 
-                    SecurityAlgorithms.HmacSha512Signature
-                    )
-            };
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var securityToken = tokenHandler.CreateToken(tokenDescriptor);
-
-            var token = tokenHandler.WriteToken(securityToken);
-            return Ok(new { token });
+                return StatusCode(500, "Внутрення ошибка сервера");
+            }
         }
     }

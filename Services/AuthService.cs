@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
+using questionnaire.Contracts;
 using questionnaire.DTO;
 
 namespace questionnaire.Services;
@@ -11,56 +12,30 @@ public class AuthService : IAuthService
 {
     private readonly UserManager<IdentityUser> _userManager;
     private readonly IConfiguration _config;
+    private ITokenService _tokenService;
 
-    public AuthService(UserManager<IdentityUser> userManager, IConfiguration config)
+    public AuthService(UserManager<IdentityUser> userManager, IConfiguration config, ITokenService tokenService)
     {
         _userManager = userManager;
         _config = config;
+        _tokenService = tokenService;
     }
 
-    public async Task<bool> RegisterUser(RegisterDTO user)
+    public async Task<IdentityResult> RegisterUser(RegisterDTO user)
     {
         var identityUser = new IdentityUser
         {
             UserName = user.UserName,
-            Email = user.UserName
+            Email = user.UserName,
         };
 
-        var result = await _userManager.CreateAsync(identityUser, user.Password);
-        return result.Succeeded;
+        return await _userManager.CreateAsync(identityUser, user.Password);
     }
 
-    public async Task<bool> Login(LoginDTO user)
+    public async Task<string> Login(IdentityUser user)
     {
-        var identityUser = await _userManager.FindByEmailAsync(user.UserName);
-        if (identityUser is null)
-        {
-            return false;
-        }
+        var token = await _tokenService.GenerateToken(user);
 
-        return await _userManager.CheckPasswordAsync(identityUser, user.Password);
-    }
-
-    public string GenerateTokenString(GenTokenDTO user)
-    {
-        var claims = new List<Claim>
-        {
-            new Claim(ClaimTypes.Email,user.UserName),
-            new Claim(ClaimTypes.Role,"Admin"),
-        };
-
-        var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config.GetSection("Jwt:Key").Value));
-
-        var signingCred = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha512Signature);
-
-        var securityToken = new JwtSecurityToken(
-            claims: claims,
-            expires: DateTime.Now.AddMinutes(60),
-            issuer: _config.GetSection("Jwt:Issuer").Value,
-            audience: _config.GetSection("Jwt:Audience").Value,
-            signingCredentials: signingCred);
-
-        string tokenString = new JwtSecurityTokenHandler().WriteToken(securityToken);
-        return tokenString;
+        return token;
     }
 }

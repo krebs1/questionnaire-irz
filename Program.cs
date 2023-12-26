@@ -5,14 +5,20 @@ using Entities;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
+using questionnaire.Contracts;
 using questionnaire.Services;
 using testx.Extensions;
+
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.ConfigureCors();
 builder.Services.ConfigureIISIntegration();
 builder.Services.ConfigurePgContext(builder.Configuration);
 builder.Services.ConfigureRepositoryWrapper();
+
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IClaimService, ClaimService>();
+
 builder.Services.AddAutoMapper(typeof(Program));
 
 builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
@@ -37,19 +43,9 @@ builder.Services.AddAuthentication(options =>
             ValidateIssuer = false,
             ValidateAudience = false,
             ClockSkew = TimeSpan.Zero
-            //ValidateActor = true,
-            //ValidateIssuer = true,
-            //ValidateAudience = true,
-            //RequireExpirationTime = true,
-            //ValidateIssuerSigningKey = true,
-            //ValidIssuer = builder.Configuration.GetSection("Jwt:Issuer").Value,
-            //ValidAudience = builder.Configuration.GetSection("Jwt:Audience").Value,
-            //IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration.GetSection("Jwt:Key").Value))
         };
     }
 );
-
-//builder.Services.AddAuthorization();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
