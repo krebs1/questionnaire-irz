@@ -37,9 +37,8 @@ public class VariantController : ControllerBase
             var variantEntity = _mapper.Map<Variant>(createVariantDTO);
             
             _repository.Variant.CreateVariant(variantEntity);
-            _repository.Save();
-          
-            return Ok(variantEntity);
+
+            return Created(nameof(Create), variantEntity);
         }
         catch (Exception e)
         {
@@ -61,8 +60,7 @@ public class VariantController : ControllerBase
             checkVariant.VariantText = updateVariantDTO.VariantText;
             
             _repository.Variant.UpdateVariant(checkVariant);
-            _repository.Save();
-          
+
             return Ok(checkVariant);
         }
         catch (Exception e)
@@ -79,8 +77,7 @@ public class VariantController : ControllerBase
             if (checkVariant == null) return NotFound($"Вариант с id '{id}' не найден");
             
             _repository.Variant.DeleteVariant(checkVariant);
-            _repository.Save();
-          
+
             return NoContent();
         }
         catch (Exception e)

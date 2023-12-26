@@ -44,9 +44,9 @@ public class WalkthroughController : ControllerBase
             walkthroughEntity.WalkthroughEnd = null;
             
             _repository.Walkthrough.CreateWalkthrough(walkthroughEntity);
-            _repository.Save();
+            //_repository.Save();
           
-            return Ok(walkthroughEntity);
+            return Created(nameof(Create), walkthroughEntity);
         }
         catch (Exception e)
         {
@@ -68,7 +68,7 @@ public class WalkthroughController : ControllerBase
             checkWalkthrough.WalkthroughEnd = DateTime.Now.ToUniversalTime();
             
             _repository.Walkthrough.UpdateWalkthrough(checkWalkthrough);
-            _repository.Save();
+            //_repository.Save();
           
             return Ok(checkWalkthrough);
         }
@@ -126,9 +126,9 @@ public class WalkthroughController : ControllerBase
             };
 
             _repository.WalkthroughQuestion.CreateWalkthroughQuestion(walkthroughQuestionEntity);
-            _repository.Save();
+            //_repository.Save();
             _repository.TextAnswer.CreateTextAnswer(textAnswerEntity);
-            _repository.Save();
+            //_repository.Save();
 
             return Ok(merged);
         }
@@ -168,7 +168,7 @@ public class WalkthroughController : ControllerBase
             walkthroughQuestionEntity.WalkthroughQuestionId = Guid.NewGuid();
             
             _repository.WalkthroughQuestion.CreateWalkthroughQuestion(walkthroughQuestionEntity);
-            _repository.Save();
+            //_repository.Save();
 
             var selectedVariantsEntities = new List<SelectedVariant>();
             foreach (var selectedVariant in answerSelectQuestionDto.SelectedVariants)
@@ -184,7 +184,7 @@ public class WalkthroughController : ControllerBase
                 selectedVariantsEntities.Add(selectVariantEntity);
                 _repository.SelectedVariant.CreateSelectedVariant(selectVariantEntity);
             }
-            _repository.Save();
+            //_repository.Save();
 
             var merged = new
             {
