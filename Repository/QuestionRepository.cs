@@ -9,15 +9,15 @@ public class QuestionRepository : RepositoryBase<Question>, IQuestionRepository
     public QuestionRepository(RepositoryContext repositoryContext)
         :base(repositoryContext){}
     
-    public void CreateQuestion(Question question)
+    public async void CreateQuestion(Question question)
     {
-        Create(question);
+      Create(question);
     }
-    public void UpdateQuestion(Question question)
+    public async void UpdateQuestion(Question question)
     {
         Update(question);
     }
-    public void DeleteQuestion(Question question)
+    public async void DeleteQuestion(Question question)
     {
         Delete(question);
     }

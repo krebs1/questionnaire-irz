@@ -18,6 +18,7 @@ builder.Services.ConfigureRepositoryWrapper();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IClaimService, ClaimService>();
+builder.Services.AddScoped<IQuestionService, QuestionService>();
 
 builder.Services.AddAutoMapper(typeof(Program));
 

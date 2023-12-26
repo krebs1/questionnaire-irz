@@ -20,10 +20,10 @@ namespace Repository
         public IQueryable<T> FindByCondition(Expression<Func<T, bool>> expression) => 
             RepositoryContext.Set<T>().Where(expression).AsNoTracking();
 
-        public async void Create(T entity)
+        public void Create(T entity)
         {
-            await RepositoryContext.Set<T>().AddAsync(entity);
-            await RepositoryContext.SaveChangesAsync();
+            RepositoryContext.Set<T>().Add(entity); 
+            RepositoryContext.SaveChanges();
         }
 
         public void Update(T entity)
