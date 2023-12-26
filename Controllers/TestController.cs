@@ -9,27 +9,27 @@ public class TestController
     [Authorize]
     public string Authorize()
     {
-        return "Authorize endpoint";
+        return "Эндпоинт для проверки авторизации";
     }
     
     [HttpPost("admin")]
     [Authorize(Roles = "admin")]
     public string Admin()
     {
-        return "Admin endpoint";
+        return "Эндпоинт для проверки на роль admin";
     }
     
     [HttpPost("user")]
     [Authorize(Roles = "user")]
     public string User()
     {
-        return "User endpoint";
+        return "Эндпоинт для проверки на роль user";
     }
     
     [HttpPost("admin-user")]
     [Authorize(Roles = "admin,user")]
     public string AdminUser()
     {
-        return "Admin and user endpoint";
+        return "Эндпоинт для проверки на роль admin и (или) user";
     }
 }
