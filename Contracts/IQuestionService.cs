@@ -6,6 +6,8 @@ namespace questionnaire.Contracts;
 
 public interface IQuestionService
 {
+    Question GetById(Guid id);
+    
     Question Create(CreateQuestionDTO createQuestionDto);
     
     Question Update(UpdateQuestionDTO updateQuestionDto);

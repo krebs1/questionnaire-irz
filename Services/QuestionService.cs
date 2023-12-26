@@ -18,6 +18,11 @@ public class QuestionService : IQuestionService
         _repository = repository;
         _mapper = mapper;
     }
+
+    public Question GetById(Guid id)
+    {
+        return _repository.Question.GetQuestionById(id);
+    }
     
     public Question Create(CreateQuestionDTO createQuestionDto)
     {

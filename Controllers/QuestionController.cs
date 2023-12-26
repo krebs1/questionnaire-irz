@@ -11,17 +11,13 @@ namespace questionnaire.Controllers;
     [ApiController]
     public class QuestionController : ControllerBase
     {
-        private IRepositoryWrapper _repository;
-
         private IQuestionService _questionService;
-            
-        private IMapper _mapper;
-    
-        public QuestionController (IRepositoryWrapper repository, IMapper mapper, IQuestionService questionService) 
+        private IQuestionnaireService _questionnaireService;
+
+        public QuestionController (IQuestionService questionService, IQuestionnaireService questionnaireService) 
         {
-            _repository = repository;
-            _mapper = mapper;
             _questionService = questionService;
+            _questionnaireService = questionnaireService;
         }
         
         [HttpPost()]
@@ -30,23 +26,22 @@ namespace questionnaire.Controllers;
             try
             {
                 if(createQuestionDto == null)
-                    return BadRequest("Data should not be empty");
+                    return BadRequest("Данные не должны равняться null");
                 
                 if(createQuestionDto.QuestionType != "SELECT" && createQuestionDto.QuestionType != "FREE")
-                    return BadRequest("The \"type\" field must have the value \"SELECT\" or \"FREE\"");
+                    return BadRequest("Поле \"type\" должно иметь значение \"SELECT\" или \"FREE\"");
 
-                var checkQuestionnaire =
-                    _repository.Questionnaire.GetQuestionnaireById(createQuestionDto.QuestionnaireId);
+                var checkQuestionnaire = _questionnaireService.GetById(createQuestionDto.QuestionnaireId);
                 if(checkQuestionnaire == null)
-                    return NotFound($"The questionnaire with id '{createQuestionDto.QuestionnaireId}' was not found");
+                    return NotFound($"Анкета с id '{createQuestionDto.QuestionnaireId}' не найдена");
 
                 var result = _questionService.Create(createQuestionDto);
 
-                return Ok(result);
+                return Created(nameof(Create),result);
             }
             catch (Exception e)
             {
-                return StatusCode(500, $"Internal server error: {e}");
+                return StatusCode(500, $"Внутрення ошибка сервера");
             }
         }
         
@@ -56,19 +51,18 @@ namespace questionnaire.Controllers;
             try
             {
                 if(updateQuestionDto == null)
-                    return BadRequest("Data should not be empty");
+                    return BadRequest("Данные не должны равняться null");
 
-                var checkQuestion = _repository.Question.GetQuestionById(updateQuestionDto.QuestionId);
+                var checkQuestion = _questionService.GetById(updateQuestionDto.QuestionId);
                 if(checkQuestion == null)
-                    return NotFound($"The question with id '{updateQuestionDto.QuestionId}' was not found");
+                    return NotFound($"Вопрос с id '{updateQuestionDto.QuestionId}' не найден");
                 
                 var result = _questionService.Update(updateQuestionDto);
-                
                 return Ok(result);
             }
             catch (Exception e)
             {
-                return StatusCode(500, $"Internal server error: {e}");
+                return StatusCode(500, $"Внутрення ошибка сервера");
             }
         }
         
@@ -77,14 +71,16 @@ namespace questionnaire.Controllers;
         {
             try
             {
-                var checkQuestion = _repository.Question.GetQuestionById(id);
-                if (checkQuestion == null) return NotFound($"The question with id '{id}' was not found");
+                var checkQuestion = _questionService.GetById(id);
+                if(checkQuestion == null)
+                    return NotFound($"Вопрос с id '{id}' не найден");
+                
                 _questionService.Delete(id);
                 return NoContent();
             }
             catch (Exception e)
             {
-                return StatusCode(500, $"Internal server error: {e}");
+                return StatusCode(500, $"Внутрення ошибка сервера");
             }
         }
 }
