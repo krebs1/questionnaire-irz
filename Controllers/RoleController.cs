@@ -25,16 +25,16 @@ public class RoleController : ControllerBase
     {
         try
         {
-            if(roleName == null) return BadRequest("The \"role name\" field should not be empty");
+            if(roleName == null) return BadRequest("Поле \"role name\" не должно быть пустым");
             
             var result = await _roleManager.CreateAsync(new IdentityRole(roleName));
-            if (!result.Succeeded) throw new Exception("Role creating is not success");
+            if (!result.Succeeded) throw new Exception("Создание роли завершилось неудачно");
             
             return Ok();
         }
         catch (Exception e)
         {
-            return StatusCode(500, $"Internal server error: {e}");
+            return StatusCode(500, $"Внутрення ошибка сервера");
         }
     }
     
@@ -43,25 +43,25 @@ public class RoleController : ControllerBase
     {
         try
         {
-            if(addRoleToUserDto == null) return BadRequest("Data should not be empty");
+            if(addRoleToUserDto == null) return BadRequest("Данные не должны быть пустыми");
             
             var checkRole = await _roleManager.FindByNameAsync(addRoleToUserDto.RoleName);
-            if (checkRole == null) return NotFound($"The role with name '{addRoleToUserDto.RoleName}' was not found");
+            if (checkRole == null) return NotFound($"Роль с именем '{addRoleToUserDto.RoleName}' не найдена");
         
             var checkUser = await _userManager.FindByIdAsync(addRoleToUserDto.UserId.ToString());
-            if (checkUser == null) return NotFound($"The user with id '{addRoleToUserDto.UserId}' was not found");
+            if (checkUser == null) return NotFound($"Пользователь с id '{addRoleToUserDto.UserId}' не найден");
 
             var isInRole = await _userManager.IsInRoleAsync(checkUser, checkRole.Name);
-            if (isInRole) return Ok("User already in role");
+            if (isInRole) return Ok("Пользователь уже находится в этой роли");
 
             var result = await _userManager.AddToRoleAsync(checkUser, checkRole.Name);
-            if (!result.Succeeded) throw new Exception("Adding role to user is not success");
+            if (!result.Succeeded) throw new Exception("Добавление роли завершилось неудачно");
         
             return Ok();
         }
         catch (Exception e)
         {
-            return StatusCode(500, $"Internal server error: {e}");
+            return StatusCode(500, $"Внутрення ошибка сервера");
         }
     }
     
@@ -70,19 +70,19 @@ public class RoleController : ControllerBase
     {
         try
         {
-            if(name == null) return BadRequest("The \"id\" field should not be empty");
+            if(name == null) return BadRequest("Поле \"id\" не должно быть пустым");
 
             var checkRole = await _roleManager.FindByNameAsync(name);
-            if (checkRole == null) return NotFound($"The role with name '{name}' was not found");
+            if (checkRole == null) return NotFound($"Роль с именем '{name}' не найдена");
 
             var result = await _roleManager.DeleteAsync(checkRole);
-            if (!result.Succeeded) throw new Exception("Role deletion is not success");
+            if (!result.Succeeded) throw new Exception("Удаление роли завершилось неудачно");
             
             return NoContent();
         }
         catch (Exception e)
         {
-            return StatusCode(500, "Internal server error");
+            return StatusCode(500, "Внутрення ошибка сервера");
         }
     }
 }
