@@ -27,16 +27,16 @@ public class WalkthroughController : ControllerBase
     {
         try
         {
-            if(startWalkthroughDto == null) return BadRequest("Data should not be empty");
+            if(startWalkthroughDto == null) return BadRequest("Данные не должны равняться null");
 
             var checkUser = await _userManager.FindByIdAsync(startWalkthroughDto.UserId);
             if(checkUser == null)
-                return NotFound($"The user with id '{startWalkthroughDto.UserId}' was not found");
+                return NotFound($"Пользователь с id '{startWalkthroughDto.UserId}' не найден");
 
             var checkQuestionnaire =
                 _repository.Questionnaire.GetQuestionnaireById(startWalkthroughDto.QuestionnaireId);
             if(checkQuestionnaire == null)
-                return NotFound($"The questionnaire with id '{startWalkthroughDto.QuestionnaireId}' was not found");
+                return NotFound($"Анкета с id '{startWalkthroughDto.QuestionnaireId}' не найдена");
             
             var walkthroughEntity = _mapper.Map<Walkthrough>(startWalkthroughDto);
             
@@ -50,7 +50,7 @@ public class WalkthroughController : ControllerBase
         }
         catch (Exception e)
         {
-            return StatusCode(500, $"Internal server error: {e}");
+            return StatusCode(500, $"Внутрення ошибка сервера");
         }
     }
     
@@ -59,11 +59,11 @@ public class WalkthroughController : ControllerBase
     {
         try
         {
-            if(id == null) return BadRequest("The \"id\" field should not be empty");
+            if(id == null) return BadRequest("Поле \"id\" не должно быть пустым");
 
             var checkWalkthrough = _repository.Walkthrough.GetWalkthroughById(id);
             if(checkWalkthrough == null)
-                return NotFound($"The walkthrough with id '{id}' was not found");
+                return NotFound($"Прохождение с id '{id}' не найдено");
 
             checkWalkthrough.WalkthroughEnd = DateTime.Now.ToUniversalTime();
             
@@ -74,7 +74,7 @@ public class WalkthroughController : ControllerBase
         }
         catch (Exception e)
         {
-            return StatusCode(500, $"Internal server error: {e}");
+            return StatusCode(500, $"Внутрення ошибка сервера");
         }
     }
     
@@ -83,21 +83,21 @@ public class WalkthroughController : ControllerBase
     {
         try
         {
-            if(answerFreeQuestionDto == null) return BadRequest("Data should not be empty");
+            if(answerFreeQuestionDto == null) return BadRequest("Данные не должны равняться null");
 
             var checkWalkthrough = _repository.Walkthrough.GetWalkthroughById(answerFreeQuestionDto.WalkthroughId);
             if(checkWalkthrough == null)
-                return NotFound($"The walkthrough with id '{answerFreeQuestionDto.WalkthroughId}' was not found");
+                return NotFound($"Прохождение с id '{answerFreeQuestionDto.WalkthroughId}' не найдено");
 
             if (checkWalkthrough.WalkthroughEnd != null)
-                return BadRequest($"The walkthrough with id '{answerFreeQuestionDto.WalkthroughId}' already ended");
+                return BadRequest($"Прохождение с id '{answerFreeQuestionDto.WalkthroughId}' уже завершено");
 
             var checkQuestion = _repository.Question.GetQuestionById(answerFreeQuestionDto.QuestionId);
             if(checkQuestion == null)
-                return NotFound($"The question with id '{answerFreeQuestionDto.QuestionId}' was not found");
+                return NotFound($"Вопрос с id '{answerFreeQuestionDto.QuestionId}' не найден");
             
             if(checkQuestion.QuestionType != "FREE")
-                return BadRequest($"Free answer available for question with type 'FREE'");
+                return BadRequest($"Свободный ответ доступен только для вопроса с типом 'FREE'");
 
             var createWalkthroughQuestionDTO = new CreateWalkthroughQuestionDTO
             (
@@ -134,7 +134,7 @@ public class WalkthroughController : ControllerBase
         }
         catch (Exception e)
         {
-            return StatusCode(500, $"Internal server error: {e}");
+            return StatusCode(500, $"Внутрення ошибка сервера");
         }
     }
     
@@ -143,21 +143,21 @@ public class WalkthroughController : ControllerBase
     {
         try
         {
-            if(answerSelectQuestionDto == null) return BadRequest("Data should not be empty");
+            if(answerSelectQuestionDto == null) return BadRequest("Данные не должны равняться null");
 
             var checkWalkthrough = _repository.Walkthrough.GetWalkthroughById(answerSelectQuestionDto.WalkthroughId);
             if(checkWalkthrough == null)
-                return NotFound($"The walkthrough with id '{answerSelectQuestionDto.WalkthroughId}' was not found");
+                return NotFound($"Прохождение с id '{answerSelectQuestionDto.WalkthroughId}' не найдено");
 
             if (checkWalkthrough.WalkthroughEnd != null)
-                return BadRequest($"The walkthrough with id '{answerSelectQuestionDto.WalkthroughId}' already ended");
+                return BadRequest($"Прохождение с id '{answerSelectQuestionDto.WalkthroughId}' уже завершено");
 
             var checkQuestion = _repository.Question.GetQuestionById(answerSelectQuestionDto.QuestionId);
             if(checkQuestion == null)
-                return NotFound($"The question with id '{answerSelectQuestionDto.QuestionId}' was not found");
+                return NotFound($"Вопрос с id '{answerSelectQuestionDto.QuestionId}' не найден");
             
             if(checkQuestion.QuestionType != "SELECT")
-                return BadRequest($"Select answer available for question with type 'SELECT'");
+                return BadRequest($"Выбор варинта ответа доступен только для вопроса с типом 'SELECT'");
 
             var createWalkthroughQuestionDTO = new CreateWalkthroughQuestionDTO
             (
@@ -198,7 +198,7 @@ public class WalkthroughController : ControllerBase
         }
         catch (Exception e)
         {
-            return StatusCode(500, $"Internal server error: {e}");
+            return StatusCode(500, $"Внутрення ошибка сервера");
         }
     }
 }
