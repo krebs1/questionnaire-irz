@@ -25,14 +25,14 @@ public class VariantController : ControllerBase
         try
         {
             if(createVariantDTO == null)
-                return BadRequest("Data should not be empty");
+                return BadRequest("Данные не должны равняться null");
 
             var checkQuestion = _repository.Question.GetQuestionById(createVariantDTO.QuestionId);
             if(checkQuestion == null)
-                return NotFound($"The question with id '{createVariantDTO.QuestionId}' was not found");
+                return NotFound($"Вопрос с id '{createVariantDTO.QuestionId}' не найден");
 
             if (checkQuestion.QuestionType != "SELECT")
-                return BadRequest("Variant can only be added for a question with type \"SELECT\"");
+                return BadRequest("Вариант может быть добавлен только для вопроса с типом \"SELECT\"");
 
             var variantEntity = _mapper.Map<Variant>(createVariantDTO);
             
@@ -43,7 +43,7 @@ public class VariantController : ControllerBase
         }
         catch (Exception e)
         {
-            return StatusCode(500, $"Internal server error: {e}");
+            return StatusCode(500, $"Внутрення ошибка сервера");
         }
     }
     [HttpPut()]
@@ -52,11 +52,11 @@ public class VariantController : ControllerBase
         try
         {
             if(updateVariantDTO == null)
-                return BadRequest("Data should not be empty");
+                return BadRequest("Данные не должны равняться null");
 
             var checkVariant = _repository.Variant.GetVariantById(updateVariantDTO.VariantId);
             if(checkVariant == null)
-                return NotFound($"The variant with id '{updateVariantDTO.VariantId}' was not found");
+                return NotFound($"Вариант с id '{updateVariantDTO.VariantId}' не найден");
 
             checkVariant.VariantText = updateVariantDTO.VariantText;
             
@@ -67,7 +67,7 @@ public class VariantController : ControllerBase
         }
         catch (Exception e)
         {
-            return StatusCode(500, $"Internal server error: {e}");
+            return StatusCode(500, $"Внутрення ошибка сервера");
         }
     }
     [HttpDelete("{id}")]
@@ -76,7 +76,7 @@ public class VariantController : ControllerBase
         try
         {
             var checkVariant = _repository.Variant.GetVariantById(id);
-            if (checkVariant == null) return NotFound($"The variant with id '{id}' was not found");
+            if (checkVariant == null) return NotFound($"Вариант с id '{id}' не найден");
             
             _repository.Variant.DeleteVariant(checkVariant);
             _repository.Save();
@@ -85,7 +85,7 @@ public class VariantController : ControllerBase
         }
         catch (Exception e)
         {
-            return StatusCode(500, $"Internal server error: {e}");
+            return StatusCode(500, $"Внутрення ошибка сервера");
         }
     }
 }
